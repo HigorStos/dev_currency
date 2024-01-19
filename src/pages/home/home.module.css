@@ -69,12 +69,11 @@ table {
   color: #bbb;
 }
 
-.tdLabel {
-  span {
-    font-weight: bold;
-    font-size: 18px;
-    color: #fff;
-  }
+.tdSpan {
+  font-weight: bold;
+  font-size: 18px;
+  color: #fff;
+  transition: color 0.5s;
 }
 
 .tdProfit {
@@ -92,6 +91,10 @@ table {
 
   &:hover {
     color: #30beff;
+
+    .tdSpan {
+      color: #30beff;
+    }
   }
 }
 
