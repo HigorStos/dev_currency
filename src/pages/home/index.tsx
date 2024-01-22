@@ -23,6 +23,7 @@ interface DataProps {
 export const Home = () => {
   const [coins, setCoins] = useState<CoinProps[]>([])
   const [inputValue, setInputValue] = useState("")
+  const [loading, setLoading] = useState(true)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,6 +49,7 @@ export const Home = () => {
         })
 
         setCoins(formatResult);
+        setLoading(false);
       })
     }
 
@@ -59,6 +61,14 @@ export const Home = () => {
     if(inputValue === "") return;
 
     navigate(`/detail/${inputValue}`);
+  }
+
+  if(loading) {
+    return(
+      <div className={styles.container}>
+        <h4 className={styles.center}>Carregando informações...</h4>
+      </div>
+    )
   }
 
   return(
