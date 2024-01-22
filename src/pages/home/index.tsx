@@ -24,6 +24,7 @@ export const Home = () => {
   const [coins, setCoins] = useState<CoinProps[]>([])
   const [inputValue, setInputValue] = useState("")
   const [loading, setLoading] = useState(true)
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,7 +43,8 @@ export const Home = () => {
           const formated = {
             ...item,
             formatedPrice: formatPrice.format(Number(item.price)),
-            formatedMarketCap: formatPrice.format(Number(item.market_cap))
+            formatedMarketCap: formatPrice.format(Number(item.market_cap)),
+            numberDelta: parseFloat(item.delta_24h.replace(",", "."))
           }
 
           return formated;
