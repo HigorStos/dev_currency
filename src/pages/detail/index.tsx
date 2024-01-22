@@ -1,7 +1,87 @@
+import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+
+import styles from './detail.module.css'
+
+interface CoinProp {
+  symbol: string
+  name: string
+  price: string
+  market_cap: string
+  low_24h: string
+  high_24h: string
+  total_volume_24h: string
+  delta_24h: string
+  formatedPrice: string
+  formatedMarket: string
+  formatedLowPrice: string
+  formatedHighPrice: string
+  error?: string
+}
+
 export const Detail = () => {
+  const { cripto } = useParams();
+  const [detail, setDetail] = useState<CoinProp>()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const getData = () => {
+      fetch(`https://coinlib.io/api/v1/coin?key=67f9141787211428&pref=BRL&symbol=${cripto}`)
+      .then(response => response.json())
+      .then((data: CoinProp) => {
+        const formatPrice = Intl.NumberFormat("pt-br", {
+          style: "currency",
+          currency: "BRL"
+        })
+
+        const resultData = {
+          ...data,
+          formatedPrice: formatPrice.format(Number(data.price)),
+          formatedMarket: formatPrice.format(Number(data.market_cap)),
+          formatedLowPrice: formatPrice.format(Number(data.low_24h)),
+          formatedHighPrice: formatPrice.format(Number(data.high_24h))
+        }
+
+        setDetail(resultData);
+        setLoading(false);
+      })
+    }
+
+    getData();
+  }, [cripto])
+
+  if(loading) {
+    return(
+      <div className={styles.container}>
+        <h4 className={styles.center}>Carregando informações...</h4>
+      </div>
+    )
+  }
+
   return(
-    <div>
-      <h1>Página Detalhes</h1>
+    <div className={styles.container}>
+      <h1 className={styles.center}>{detail?.name}</h1>
+      <p className={styles.center}>{detail?.symbol}</p>
+      <section className={styles.content}>
+        <p>
+          <strong>Preço:</strong> {detail?.formatedPrice}
+        </p>
+        <p>
+          <strong>Maior Preço 24h:</strong> {detail?.formatedHighPrice}
+        </p>
+        <p>
+          <strong>Menor Preço 24h:</strong> {detail?.formatedLowPrice}
+        </p>
+        <p> 
+          <strong>Delta 24h</strong>
+          <span className={parseInt(detail?.delta_24h || "0") > 0 ? styles.profit : styles.loss}>
+            {detail?.delta_24h}
+          </span>
+        </p>
+        <p>
+          <strong>Valor de Mercado</strong> {detail?.formatedMarket}
+        </p>
+      </section>
     </div>
   )
 }

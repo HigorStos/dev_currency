@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { FormEvent, useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { BiSearch } from 'react-icons/bi'
 
@@ -22,13 +22,15 @@ interface DataProps {
 
 export const Home = () => {
   const [coins, setCoins] = useState<CoinProps[]>([])
+  const [inputValue, setInputValue] = useState("")
+  const navigate = useNavigate();
 
   useEffect(() => {
     function getData() {
-      fetch("https://sujeitoprogramador.com/api-cripto/?key=67f9141787211428&pref=BRL")
+      fetch("https://coinlib.io/api/v1/coinlist?key=67f9141787211428&pref=BRL")
       .then(response => response.json())
       .then((data: DataProps) => {
-        const coinsData = data.coins.slice(0, 15)
+        const coinsData = data.coins.slice(1, 16)
 
         const formatPrice = Intl.NumberFormat("pt-br", {
           style: "currency",
@@ -45,18 +47,27 @@ export const Home = () => {
           return formated;
         })
 
-        setCoins(formatResult)
+        setCoins(formatResult);
       })
     }
 
     getData();
   }, [])
 
+  const handleSearch = (e: FormEvent) => {
+    e.preventDefault();
+    if(inputValue === "") return;
+
+    navigate(`/detail/${inputValue}`);
+  }
+
   return(
     <main className={styles.container}>
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={handleSearch}>
         <input
           placeholder="Digite o símbolo da moeda: BTC..."
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
         />
         <button type='submit'>
           <BiSearch size={30} color="#fff" />
@@ -85,7 +96,7 @@ export const Home = () => {
               <td className={styles.tdLabel} data-label="Valor de Mercado">
                 {coin.formatedMarketCap}
               </td>
-              <td className={parseFloat(coin?.delta_24h) >= 0 ? styles.tdProfit : styles.tdLoss} data-label="Volume">
+              <td className={parseInt(coin?.delta_24h || "0") > 0 ? styles.tdProfit : styles.tdLoss} data-label="Volume">
                 <span>{coin?.delta_24h}</span>
               </td>
             </tr>
