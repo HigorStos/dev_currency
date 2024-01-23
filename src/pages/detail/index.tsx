@@ -56,7 +56,6 @@ export const Detail = () => {
     }
 
     getData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cripto])
 
   if(loading) {
