@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 
 import styles from './detail.module.css'
 
@@ -82,15 +82,18 @@ export const Detail = () => {
           <strong>Menor Preço 24h:</strong> {detail?.formatedLowPrice}
         </p>
         <p> 
-          <strong>Delta 24h</strong>
+          <strong>Volume 24h:</strong>
           <span className={detail?.numberDelta && detail.numberDelta >= 0 ? styles.profit : styles.loss}>
-            {detail?.delta_24h}
+            {detail?.delta_24h}%
           </span>
         </p>
         <p>
-          <strong>Valor de Mercado</strong> {detail?.formatedMarket}
+          <strong>Valor de Mercado:</strong> {detail?.formatedMarket}
         </p>
       </section>
+      <Link className={styles.backButton} to="/">
+        Voltar para página principal
+      </Link>
     </div>
   )
 }
