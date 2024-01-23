@@ -16,6 +16,7 @@ interface CoinProp {
   formatedMarket: string
   formatedLowPrice: string
   formatedHighPrice: string
+  numberDelta?: number
   error?: string
 }
 
@@ -45,7 +46,8 @@ export const Detail = () => {
           formatedPrice: formatPrice.format(Number(data.price)),
           formatedMarket: formatPrice.format(Number(data.market_cap)),
           formatedLowPrice: formatPrice.format(Number(data.low_24h)),
-          formatedHighPrice: formatPrice.format(Number(data.high_24h))
+          formatedHighPrice: formatPrice.format(Number(data.high_24h)),
+          numberDelta: parseFloat(data.delta_24h.replace(",", "."))
         }
 
         setDetail(resultData);
@@ -54,6 +56,7 @@ export const Detail = () => {
     }
 
     getData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cripto])
 
   if(loading) {
@@ -80,7 +83,7 @@ export const Detail = () => {
         </p>
         <p> 
           <strong>Delta 24h</strong>
-          <span className={parseInt(detail?.delta_24h || "0") > 0 ? styles.profit : styles.loss}>
+          <span className={detail?.numberDelta && detail.numberDelta >= 0 ? styles.profit : styles.loss}>
             {detail?.delta_24h}
           </span>
         </p>

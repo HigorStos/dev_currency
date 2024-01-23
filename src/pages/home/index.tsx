@@ -14,6 +14,7 @@ interface CoinProps {
   delta_24h: string
   formatedPrice: string
   formatedMarketCap: string
+  numberDelta?: number
 }
 
 interface DataProps {
@@ -108,7 +109,7 @@ export const Home = () => {
               <td className={styles.tdLabel} data-label="Valor de Mercado">
                 {coin.formatedMarketCap}
               </td>
-              <td className={parseInt(coin?.delta_24h || "0") > 0 ? styles.tdProfit : styles.tdLoss} data-label="Volume">
+              <td className={coin.numberDelta && coin.numberDelta >= 0 ? styles.tdProfit : styles.tdLoss} data-label="Volume">
                 <span>{coin?.delta_24h}</span>
               </td>
             </tr>
